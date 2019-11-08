@@ -78,8 +78,9 @@ class ContactData extends React.Component{
         	ingredients: this.props.ings,
         	price: this.props.price,
             order:formData,
+            userId:this.props.userId
         };
-        this.props.onOrderBurger(order);
+        this.props.onOrderBurger(order, this.props.token);
         
     };
     checkValidity(value, rules){
@@ -109,7 +110,6 @@ class ContactData extends React.Component{
         for(let identifier in updatedOrderForm){
             formIsValid = updatedOrderForm[identifier].valid && formIsValid;
         }
-        console.log(formIsValid);
         this.setState({orderForm:updatedOrderForm,formIsValid:formIsValid})
     };
     render() {
@@ -134,12 +134,12 @@ class ContactData extends React.Component{
                             shouldValidate={formElement.config.validation}
                             touched = {formElement.config.touched}
                             changed = {(event)=>this.inputChangedHandler(event, formElement.id)}
-                    />);
-                })}
-           <Button
-               disabled ={!this.state.formIsValid}
-               btnType="Success"
-            >ORDER</Button>
+                            />);
+                        })}
+                <Button
+                    disabled ={!this.state.formIsValid}
+                    btnType="Success"
+                    >ORDER</Button>
         </form>);
         if(this.props.loading){
             form =<Spinner/>;
@@ -158,12 +158,14 @@ const mapStateToProps=state=>{
     return{
         ings:state.burgerBuilder.ingredients,
         price:state.burgerBuilder.price,
-        loading:state.order.loading
+        loading:state.order.loading,
+        token:state.auth.token,
+        userId:state.auth.userId
     }
 }
 const mapDispatchToprops = (dispatch) => {
     return{
-        onOrderBurger:(orderData)=>dispatch(actionCreators.purchaseBurger(orderData)),
+        onOrderBurger:(orderData, token)=>dispatch(actionCreators.purchaseBurger(orderData, token)),
     };
 }
 export default connect(mapStateToProps, mapDispatchToprops)(withErrorHandler(ContactData, axios));

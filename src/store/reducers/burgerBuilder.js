@@ -10,6 +10,7 @@ const initialState = {
     totalPrice:30,
     purchasable:false,
     error:false,    
+    building:false
 }
 const reducer =(state = initialState, action)=>{
     switch(action.type){
@@ -22,6 +23,7 @@ const reducer =(state = initialState, action)=>{
                 },
                 totalPrice:state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
                 purchasable:true,
+                building:true
             };
         case actionTypes.REMOVE_INGREDIENT:
             let purchasable = false;
@@ -32,6 +34,7 @@ const reducer =(state = initialState, action)=>{
                     [action.ingredientName]:state.ingredients[action.ingredientName] - 1,
                 },
                 totalPrice:state.totalPrice - INGREDIENT_PRICES[action.ingredientName],
+                building:true,
             };
             if(newState.totalPrice > 30){
                 purchasable=true;
@@ -47,6 +50,7 @@ const reducer =(state = initialState, action)=>{
                 error:false,
                 totalPrice:30,
                 purchasable:false,
+                building:false
             };
         case actionTypes.FETCH_INGREDIENTS_FAILED:
             return{
